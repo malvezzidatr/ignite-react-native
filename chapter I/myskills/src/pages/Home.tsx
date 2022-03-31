@@ -16,17 +16,19 @@ interface SkillData {
 }
 
 export function Home() {
-  const [newSkill, setNewSkill] = useState('');
+  const [newSkill, setNewSkill] = useState<string>('');
   const [mySkills, setMySkills] = useState<SkillData[]>([]);
-  const [greeting, setGreeting] = useState('');
+  const [greeting, setGreeting] = useState<string>('');
 
   function handleAddNewSkill(){
-    const data = {
-      id: String(new Date().getTime()),
-      name: newSkill,
+    if (newSkill) {
+      const data = {
+        id: String(new Date().getTime()),
+        name: newSkill,
+      }
+  
+      setMySkills(oldSkills => [...oldSkills, data]);
     }
-
-    setMySkills(oldSkills => [...oldSkills, data]);
   }
 
   useEffect(() => {
@@ -50,7 +52,10 @@ export function Home() {
         placeholderTextColor='#555'
         onChangeText={setNewSkill}
         />
-      <Button onPress={handleAddNewSkill} />
+      <Button 
+        onPress={handleAddNewSkill}
+        title='ADD'
+      />
 
       <Text style={[styles.title, {marginVertical: 50}]}>My skills</Text>
       <FlatList 
