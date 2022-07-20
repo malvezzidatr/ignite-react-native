@@ -1,5 +1,4 @@
 import React from 'react';
-import {  } from '@expo/vector-icons';
 
 import { 
     Container,
@@ -9,7 +8,8 @@ import {
     Photo,
     User,
     UserGreeting,
-    UserName
+    UserName,
+    Icon
 
 } from './styles';
 
@@ -27,6 +27,7 @@ export function Dashboard() {
                             <UserName>Caio</UserName>
                         </User>
                     </UserInfo>
+                    <Icon name="power" />
                 </UserWrapper>
             </Header>
         </Container>
