@@ -19,6 +19,7 @@ export const UserWrapper = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-top: 58px;
 `;
 
 export const UserInfo = styled.View`
@@ -61,4 +62,7 @@ export const HighLightCards = styled.ScrollView.attrs({
     horizontal: true,
     showsHorizontalScrollIndicator: false
 })`
+    width: 100%;
+    position: absolute;
+    margin-top: ${RFPercentage(20)}px;
 `;
