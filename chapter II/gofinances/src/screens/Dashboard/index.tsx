@@ -1,7 +1,6 @@
 import React from 'react';
-import { RFPercentage } from 'react-native-responsive-fontsize';
 import { HighLightCard } from '../../components/HighLightCard';
-import { TransactionCard } from '../../components/TransactionCard';
+import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 
 import { 
     Container,
@@ -19,51 +18,65 @@ import {
     TransactionList
 } from './styles';
 
+export interface DataListProps extends TransactionCardProps {
+    id: string;
+}
+
 export function Dashboard() {
-    const data = [{
+    const data: DataListProps[] = [{
+        id: '1',
         title: 'Desenvolvimento de site',
         amount: 'R$ 12.400,00',
         category: {
             name: 'Vendas',
             icon: 'dollar-sign'
         },
-        date: '13/04/2020'
+        date: '13/04/2020',
+        type: 'positive'
     },
     {
-        title: 'Desenvolvimento de site',
+        id: '2',
+        title: 'Hamburgueria Pizzy',
         amount: 'R$ 12.400,00',
         category: {
-            name: 'Vendas',
-            icon: 'dollar-sign'
+            name: 'Alimentação',
+            icon: 'coffee'
         },
-        date: '13/04/2020'
+        date: '10/04/2020',
+        type: 'negative'
     },
     {
-        title: 'Desenvolvimento de site',
+        id: '3',
+        title: 'Aluguel do apartamento',
         amount: 'R$ 12.400,00',
         category: {
-            name: 'Vendas',
-            icon: 'dollar-sign'
+            name: 'Casa',
+            icon: 'shopping-bag'
         },
-        date: '13/04/2020'
+        date: '10/04/2020',
+        type: 'negative'
     },
     {
+        id: '4',
         title: 'Desenvolvimento de site',
         amount: 'R$ 12.400,00',
         category: {
             name: 'Vendas',
             icon: 'dollar-sign'
         },
-        date: '13/04/2020'
+        date: '13/04/2020',
+        type: 'positive'
     },
     {
+        id: '5',
         title: 'Desenvolvimento de site',
         amount: 'R$ 12.400,00',
         category: {
             name: 'Vendas',
             icon: 'dollar-sign'
         },
-        date: '13/04/2020'
+        date: '13/04/2020',
+        type: 'negative'
     }]
     return (
         <Container>
@@ -107,11 +120,9 @@ export function Dashboard() {
 
                 <TransactionList 
                     data={data}
+                    keyExtractor={ item => item.id }
                     renderItem={({ item }) => <TransactionCard data={ item } />}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        paddingBottom: RFPercentage(10),
-                    }}
+                    
                 />
                 
             </Transactions>
