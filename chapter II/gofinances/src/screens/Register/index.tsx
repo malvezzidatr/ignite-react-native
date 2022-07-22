@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, SetStateAction } from 'react';
 import { 
     Container,
     Header,
@@ -13,8 +13,9 @@ import { Button } from '../../components/Forms/Button';
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton';
 import { CategorySelect } from '../../components/Forms/CategorySelect';
 
+
 export function Register() {
-    const [transactionType, setTransactionType] = useState();
+    const [transactionType, setTransactionType] = useState<string>();
 
     function handleTransactionsTypeSelect(type: 'up' | 'down') {
         setTransactionType(type);
