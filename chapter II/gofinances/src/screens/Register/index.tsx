@@ -1,4 +1,5 @@
-import React, { useState, SetStateAction } from 'react';
+import React, { useState } from 'react';
+import { Modal } from 'react-native';
 import { 
     Container,
     Header,
@@ -11,14 +12,32 @@ import {
 import { Input } from '../../components/Forms/Input';
 import { Button } from '../../components/Forms/Button';
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton';
-import { CategorySelect } from '../../components/Forms/CategorySelect';
+import { CategorySelectButton } from '../../components/Forms/CategorySelectButton';
+import { CategorySelect } from '../CategorySelect';
 
+interface Category {
+    key: string;
+    name: string;
+}
 
 export function Register() {
     const [transactionType, setTransactionType] = useState<string>();
+    const [categoryModalOpen, setCategoryModalOpen] = useState<boolean>(false);
+    const [category, setCategory] = useState<Category>({
+        key: 'category',
+        name: 'Categoria',
+    });
 
     function handleTransactionsTypeSelect(type: 'up' | 'down') {
         setTransactionType(type);
+    }
+    
+    function handleOpenSelectCategoryModal() {
+        setCategoryModalOpen(true);
+    }
+
+    function handleCloseSelectCategoryModal() {
+        setCategoryModalOpen(false);
     }
 
     return (
@@ -49,10 +68,17 @@ export function Register() {
                             onPress={() => handleTransactionsTypeSelect('down')}
                         />
                     </TransactionsTypes>
-                    <CategorySelect title='Categoria' />
+                    <CategorySelectButton title={category.name} onPress={handleOpenSelectCategoryModal} />
                 </Fields>
                 <Button title='Enviar' />
             </Form>
+            <Modal visible={categoryModalOpen} statusBarTranslucent={true} >
+                <CategorySelect
+                    category={category}
+                    setCategory={setCategory}
+                    closeSelectCategory={handleCloseSelectCategoryModal}
+                />
+            </Modal>
         </Container>
     );
 };
