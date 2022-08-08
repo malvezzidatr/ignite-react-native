@@ -41,7 +41,6 @@ const schema = Yup.object().shape({
 })
 
 export function Register() {
-    const dataKey = '@gofinance:transactions';
     const { navigate } = useNavigation<Navigation>();
     const [transactionType, setTransactionType] = useState<string>();
     const [categoryModalOpen, setCategoryModalOpen] = useState<boolean>(false);
@@ -80,12 +79,13 @@ export function Register() {
             id: String(uuid.v4()),
             amount: form.amount,
             name: form.name,
-            transactionType,
+            type: transactionType,
             category: category.key,
             date: new Date()
         }
-
+        console.log(transactionType)
         try {
+            const dataKey = '@gofinance:transactions';
             const data = await AsyncStorage.getItem(dataKey);
             const currentData = data ? JSON.parse(data) : [];
             const dataFormatted = [
