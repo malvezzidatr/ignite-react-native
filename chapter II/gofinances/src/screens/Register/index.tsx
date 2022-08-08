@@ -31,6 +31,10 @@ interface FormData {
     amount: string;
 }
 
+type Navigation = {
+    navigate: (value: string) => void;
+}
+
 const schema = Yup.object().shape({
     name: Yup.string().required('Nome é obrigatório'),
     amount: Yup.number().typeError('Informe um valor númerico').positive('O valor não pode ser negativo').required('O valor é obrigatório')
@@ -38,7 +42,7 @@ const schema = Yup.object().shape({
 
 export function Register() {
     const dataKey = '@gofinance:transactions';
-    const navigation = useNavigation();
+    const { navigate } = useNavigation<Navigation>();
     const [transactionType, setTransactionType] = useState<string>();
     const [categoryModalOpen, setCategoryModalOpen] = useState<boolean>(false);
     const [category, setCategory] = useState<Category>({
@@ -95,7 +99,7 @@ export function Register() {
                 key: 'category',
                 name: 'Categoria'
             });
-            navigation.navigate('Listagem');
+            navigate('Listagem');
 
         } catch (error) {
             console.log(error);
