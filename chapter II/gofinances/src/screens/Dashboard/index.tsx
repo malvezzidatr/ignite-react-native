@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 
@@ -15,7 +16,8 @@ import {
     HighLightCards,
     Transactions,
     Title,
-    TransactionList
+    TransactionList,
+    LogoutButton
 } from './styles';
 
 export interface DataListProps extends TransactionCardProps {
@@ -23,61 +25,40 @@ export interface DataListProps extends TransactionCardProps {
 }
 
 export function Dashboard() {
-    const data: DataListProps[] = [{
-        id: '1',
-        title: 'Desenvolvimento de site',
-        amount: 'R$ 12.400,00',
-        category: {
-            name: 'Vendas',
-            icon: 'dollar-sign'
-        },
-        date: '13/04/2020',
-        type: 'positive'
-    },
-    {
-        id: '2',
-        title: 'Hamburgueria Pizzy',
-        amount: 'R$ 12.400,00',
-        category: {
-            name: 'Alimentação',
-            icon: 'coffee'
-        },
-        date: '10/04/2020',
-        type: 'negative'
-    },
-    {
-        id: '3',
-        title: 'Aluguel do apartamento',
-        amount: 'R$ 12.400,00',
-        category: {
-            name: 'Casa',
-            icon: 'shopping-bag'
-        },
-        date: '10/04/2020',
-        type: 'negative'
-    },
-    {
-        id: '4',
-        title: 'Desenvolvimento de site',
-        amount: 'R$ 12.400,00',
-        category: {
-            name: 'Vendas',
-            icon: 'dollar-sign'
-        },
-        date: '13/04/2020',
-        type: 'positive'
-    },
-    {
-        id: '5',
-        title: 'Desenvolvimento de site',
-        amount: 'R$ 12.400,00',
-        category: {
-            name: 'Vendas',
-            icon: 'dollar-sign'
-        },
-        date: '13/04/2020',
-        type: 'negative'
-    }]
+    const [data, setData] = useState<DataListProps[]>();
+
+    async function loadTransactions() {
+        const dataKey = '@gofinance:transactions';
+        const response = await AsyncStorage.getItem(dataKey);
+        const transactions = response ? JSON.parse(response) : [];
+        const transactionsFormatted: DataListProps[] = transactions.map((item: DataListProps) => {
+            const amount = Number(item.amount).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+
+            const date = Intl.DateTimeFormat('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit'
+            }).format(new Date(item.date));
+
+            return {
+                id: item.id,
+                name: item.name,
+                amount,
+                type: item.type,
+                category: item.category,
+                date,
+            }
+        });
+        setData(transactionsFormatted);
+    }
+
+    useEffect(() => {
+        loadTransactions();
+    }, []);
+
     return (
         <Container>
             <Header>
@@ -91,7 +72,9 @@ export function Dashboard() {
                             <UserName>Caio</UserName>
                         </User>
                     </UserInfo>
-                    <Icon name="power" />
+                    <LogoutButton onPress={() => {}}>
+                        <Icon name="power" />
+                    </LogoutButton>
                 </UserWrapper>
             </Header>
             <HighLightCards >
