@@ -92,6 +92,10 @@ export const TransactionList = styled(
     contentContainerStyle: {
         paddingBottom: RFPercentage(4),
     }
-})`
+})``;
 
-`;
+export const LoadContainer = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+`
