@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HighLightCard } from '../../components/HighLightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
@@ -58,6 +59,10 @@ export function Dashboard() {
     useEffect(() => {
         loadTransactions();
     }, []);
+
+    useFocusEffect(useCallback(() => {
+        loadTransactions();
+    }, []));
 
     return (
         <Container>
