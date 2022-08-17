@@ -14,6 +14,7 @@ import {
 import theme from './src/global/styles/theme';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppRoutes } from './src/routes/app.routes';
+import { SignIn } from './src/screens/SignIn';
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -30,7 +31,7 @@ export default function App() {
         <ThemeProvider theme={ theme }>
             <NavigationContainer>
                 <StatusBar barStyle="light-content"/>
-                <AppRoutes />
+                <SignIn />
             </NavigationContainer>
         </ThemeProvider>
     )
