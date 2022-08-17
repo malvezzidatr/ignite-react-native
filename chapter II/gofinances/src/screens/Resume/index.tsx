@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from 'styled-components';
 import { HistoryCard } from '../../components/HistoryCard';
@@ -14,11 +15,13 @@ import {
     MonthSelect,
     MonthSelectButton,
     MonthSelectIcon,
-    Month
+    Month,
+    LoadContainer
 } from './styles';
 import { VictoryPie } from 'victory-native';
 import { categories } from '../../utils/categories';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface TransactionData {
     id: string;
@@ -39,6 +42,7 @@ interface CategoryData {
 }
 
 export function Resume() {
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [categoriesTotal, setCategoriesTotal] = useState<CategoryData[]>([]);
     const theme = useTheme();
@@ -52,6 +56,7 @@ export function Resume() {
     }
 
     async function loadData() {
+        setIsLoading(true);
         const dataKey = '@gofinance:transactions';
         const response = await AsyncStorage.getItem(dataKey);
         const responseFormatted = response ? JSON.parse(response) : [];
@@ -94,67 +99,77 @@ export function Resume() {
         });
 
         setCategoriesTotal(totalByCategory);
+        setIsLoading(false);
     }
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         loadData();
-    }, [selectedDate]);
+    }, [selectedDate]));
 
     return (
         <Container>
             <Header>
                 <Title>Resumo por categoria</Title>
             </Header>
-            <Content
-                showVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                    paddingHorizontal: 24,
-                    paddingBottom: useBottomTabBarHeight(),
-                }}
-            >
-                <MonthSelect>
-                    <MonthSelectButton onPress={() => handleDateChange('previous')}>
-                        <MonthSelectIcon name="chevron-left" />
-                    </MonthSelectButton>
-
-                    <Month>
-                        { format(selectedDate, 'MMMM, yyyy', { locale: ptBR }) }
-                    </Month>
-
-                    <MonthSelectButton onPress={() => handleDateChange('next')}>
-                        <MonthSelectIcon name="chevron-right" />
-                    </MonthSelectButton>
-                </MonthSelect>
-                
-                <ChartContainer>
-                    <VictoryPie
-                        data={categoriesTotal}
-                        colorScale={categoriesTotal.map(item => item.color)}
-                        style={{
-                            labels: {
-                                fontSize: RFValue(18),
-                                fontWeight: 'bold',
-                                fill: theme.colors.shape
-                            },
+            {
+                isLoading ?
+                    <LoadContainer>
+                        <ActivityIndicator 
+                            color={theme.colors.primary}
+                            size='large'
+                        />
+                    </LoadContainer> :
+                    <Content
+                        showVerticalScrollIndicator={false}
+                        contentContainerStyle={{
+                            paddingHorizontal: 24,
+                            paddingBottom: useBottomTabBarHeight(),
                         }}
-                        labelRadius={70}
-                        x='percent'
-                        y='total'
-                    />
-                </ChartContainer>
-                {
-                    categoriesTotal.map(({ key, name, totalFormatted, color }) => {
-                        return (
-                            <HistoryCard
-                                key={ key }
-                                title={ name }
-                                amount={ totalFormatted }
-                                color={ color }
+                    >
+                        <MonthSelect>
+                            <MonthSelectButton onPress={() => handleDateChange('previous')}>
+                                <MonthSelectIcon name="chevron-left" />
+                            </MonthSelectButton>
+
+                            <Month>
+                                { format(selectedDate, 'MMMM, yyyy', { locale: ptBR }) }
+                            </Month>
+
+                            <MonthSelectButton onPress={() => handleDateChange('next')}>
+                                <MonthSelectIcon name="chevron-right" />
+                            </MonthSelectButton>
+                        </MonthSelect>
+                        
+                        <ChartContainer>
+                            <VictoryPie
+                                data={categoriesTotal}
+                                colorScale={categoriesTotal.map(item => item.color)}
+                                style={{
+                                    labels: {
+                                        fontSize: RFValue(12),
+                                        fontWeight: 'bold',
+                                        fill: theme.colors.shape,
+                                    },
+                                }}
+                                labelRadius={80}
+                                x='percent'
+                                y='total'
                             />
-                        )
-                    })
-                }
-            </Content>
+                        </ChartContainer>
+                        {
+                            categoriesTotal.map(({ key, name, totalFormatted, color }) => {
+                                return (
+                                    <HistoryCard
+                                        key={ key }
+                                        title={ name }
+                                        amount={ totalFormatted }
+                                        color={ color }
+                                    />
+                                )
+                            })
+                        }
+                    </Content>
+            }
         </Container>
     )
 }
