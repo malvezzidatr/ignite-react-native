@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, ActivityIndicator } from 'react-native';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import { ThemeProvider } from 'styled-components';
@@ -13,8 +13,7 @@ import {
 
 import theme from './src/global/styles/theme';
 import { Routes } from './src/routes';
-import { SignIn } from './src/screens/SignIn';
-import { AuthProvider } from './src/hooks/auth';
+import { AuthProvider, useAuth } from './src/hooks/auth';
 
 
 export default function App() {
@@ -24,8 +23,13 @@ export default function App() {
         Poppins_700Bold
     });
 
-    if (!fontsLoaded) {
-        return null;
+    const { userStorageLoading } = useAuth();
+
+
+    if (!fontsLoaded || userStorageLoading) {
+        return <ActivityIndicator size='large' style={{
+            marginTop: 400
+        }} />;
     }
 
     return (

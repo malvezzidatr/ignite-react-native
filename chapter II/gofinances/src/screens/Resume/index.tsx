@@ -22,6 +22,7 @@ import { VictoryPie } from 'victory-native';
 import { categories } from '../../utils/categories';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 interface TransactionData {
     id: string;
@@ -45,6 +46,7 @@ export function Resume() {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [categoriesTotal, setCategoriesTotal] = useState<CategoryData[]>([]);
+    const { user } = useAuth();
     const theme = useTheme();
 
     function handleDateChange(action: 'next' | 'previous') {
@@ -57,7 +59,7 @@ export function Resume() {
 
     async function loadData() {
         setIsLoading(true);
-        const dataKey = '@gofinance:transactions';
+        const dataKey = `@gofinance:transactions_user:${user.id}`;
         const response = await AsyncStorage.getItem(dataKey);
         const responseFormatted = response ? JSON.parse(response) : [];
 
