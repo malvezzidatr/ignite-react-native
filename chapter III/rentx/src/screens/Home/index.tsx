@@ -10,8 +10,27 @@ import {
     HeaderContent
 } from './styles';
 
-export function Home(){
+import { Car } from '../../components/Car';
 
+export function Home(){
+    const CarData = {
+        brand: 'Audi',
+        name: 'RS 5 Coupé',
+        rent: {
+            period: 'Ao dia',
+            price: 120,
+        },
+        thumbnail: '',
+    }
+    const CarTwo = {
+        brand: 'Porsche',
+        name: 'RS 5 Coupé',
+        rent: {
+            period: 'Ao dia',
+            price: 340,
+        },
+        thumbnail: '',
+    }
     return (
         <Container>
             <StatusBar
@@ -30,6 +49,8 @@ export function Home(){
                     </TotalCars>
                 </HeaderContent>
             </Header>
+            <Car data={CarData}/>
+            <Car data={CarTwo}/>
         </Container>
     );
 }
