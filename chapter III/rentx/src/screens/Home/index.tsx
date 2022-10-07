@@ -7,7 +7,8 @@ import {
     Container,
     Header,
     TotalCars,
-    HeaderContent
+    HeaderContent,
+    CarList
 } from './styles';
 
 import { Car } from '../../components/Car';
@@ -22,15 +23,7 @@ export function Home(){
         },
         thumbnail: '',
     }
-    const CarTwo = {
-        brand: 'Porsche',
-        name: 'RS 5 Coupé',
-        rent: {
-            period: 'Ao dia',
-            price: 340,
-        },
-        thumbnail: '',
-    }
+   
     return (
         <Container>
             <StatusBar
@@ -49,8 +42,12 @@ export function Home(){
                     </TotalCars>
                 </HeaderContent>
             </Header>
+            <CarList
+                data={[1,2,3, 4, 5, 6, 7]}
+                keyExtractor={item => String(item)}
+                renderItem={({ item }) => <Car data={CarData} />}
+            />
             <Car data={CarData}/>
-            <Car data={CarTwo}/>
         </Container>
     );
 }
